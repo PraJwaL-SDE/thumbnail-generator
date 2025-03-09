@@ -58,6 +58,35 @@ app.post('/video/thumbnail', upload.single('video'), (req, res) => {
       fs.unlinkSync(videoPath);
     });
 });
+app.get('/prime', (req, res) => {
+  const n = parseInt(req.query.n, 10);
+
+  if (isNaN(n) || n <= 0) {
+    return res.status(400).send({ error: 'Please provide a valid positive integer for n.' });
+  }
+
+  const primes = [];
+  let num = 2;
+
+  while (primes.length < n) {
+    if (isPrime(num)) {
+      primes.push(num);
+    }
+    num++;
+  }
+
+  res.send({ primes });
+});
+
+function isPrime(num) {
+  if (num < 2) return false;
+  for (let i = 2; i <= Math.sqrt(num); i++) {
+    if (num % i === 0) return false;
+  }
+  return true;
+}
+
+
 
 // Start the server
 app.listen(port, () => {
